@@ -1,0 +1,20 @@
+cmake_minimum_required(VERSION 3.20)
+project(deck_fsr_benchmark LANGUAGES C CXX)
+
+if(NOT DEFINED FSR_SOURCE)
+    message(FATAL_ERROR "Set FSR_SOURCE to the extracted pinned FSR-Vulkan source")
+endif()
+
+set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
+set(FFX_VK_PORTABLE_BUILD_FSR3_3_1_5_SCAFFOLD OFF CACHE BOOL "" FORCE)
+set(FFX_VK_PORTABLE_BUILD_FSR4_V07_VULKAN OFF CACHE BOOL "" FORCE)
+add_subdirectory("${FSR_SOURCE}" fsr-vulkan EXCLUDE_FROM_ALL)
+
+find_package(Vulkan REQUIRED)
+add_executable(deck-fsr-benchmark benchmark.cpp)
+target_compile_features(deck-fsr-benchmark PRIVATE cxx_std_17)
+target_link_libraries(deck-fsr-benchmark PRIVATE ffx-vulkan::portable Vulkan::Vulkan)
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    target_compile_options(deck-fsr-benchmark PRIVATE -Wall -Wextra -Wno-missing-field-initializers)
+    target_link_options(deck-fsr-benchmark PRIVATE -static-libstdc++ -static-libgcc)
+endif()
