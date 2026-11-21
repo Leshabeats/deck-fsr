@@ -20,7 +20,9 @@ Textures use descriptor set 1, binding 1. Push constants hold the address of fou
 | Pixel flags | `globalBase + 15` |
 | Main output, auxiliary output | `outputBase`, `outputBase + 1` |
 
-The coordinate UBO uses set 2, binding 0. The array element comes from push-constant byte 12. Both shaders add decoded motion to the reprojection coordinate, then multiply it by `C[0].xy` and add `C[0].zw` to reach history UV. The profile decodes the first 80 UBO bytes. The resulting numeric motion scale depends on captured values and the active render region. Texture formats, depth convention, projection jitter and ordering relative to HUD rendering are open checks.
+The coordinate UBO uses set 2, binding 0. The array element comes from push-constant byte 12. Both shaders add decoded motion to the reprojection coordinate, then multiply it by `C[0].xy` and add `C[0].zw` to reach history UV. The profile decodes the first 80 UBO bytes. The resulting numeric motion scale depends on captured values and the active render region. Texture formats, depth convention and projection jitter are open checks.
+
+In frame 3832, the supersampling TAA dispatch precedes an indexed UI draw in command order. The draw's active attachment and the composition order of individual HUD elements remain unknown. [Capture evidence](integration.md)
 
 ## Resolve a saved frame
 
